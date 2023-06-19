@@ -51,6 +51,24 @@ const Home = () => {
     [0, 1],
     [-1, 1],
   ];
+  function getRandomInt(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  const setBomb = () => {
+    const newBombMap: number[][] = JSON.parse(JSON.stringify(bombMap));
+    for (let i = 0; i <= bombCount; ) {
+      const r1 = getRandomInt(0, 8);
+      const r2 = getRandomInt(0, 8);
+      if (bombMap[r1][r2] === 0) {
+        newBombMap[r1][r2] = 1;
+        i++;
+      }
+    }
+    setBombMap(newBombMap);
+  };
+  setBomb();
   const checkAround = (x: number, y: number) => {
     let bombs = 0;
     for (const [dy, dx] of directions) {
@@ -80,6 +98,9 @@ const Home = () => {
   const makeBoard = () => {
     outer: for (let y = 0; y <= 8; y++) {
       for (let x = 0; x <= 8; x++) {
+        if (bombMap[y][x] === 1) {
+          board[y][x] = 11;
+        }
         if (userInputs[y][x] === 0) {
           board[y][x] = -1;
         } else if (userInputs[y][x] === 1) {
